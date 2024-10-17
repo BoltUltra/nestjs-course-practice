@@ -1,3 +1,4 @@
+import { UsersService } from './providers/users.service';
 import {
   Controller,
   Get,
@@ -19,15 +20,14 @@ import { PatchUserDto } from './dtos/patch-user.dto';
 
 @Controller('users')
 export class UsersController {
+  constructor(private readonly usersService: UsersService) {}
   @Get('/:id?')
   public getUsers(
     @Param() getUsersParamDto: GetUsersParamDto,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
   ) {
-    console.log(getUsersParamDto);
-
-    return 'You sent a GET request to users endpoint';
+    return this.usersService.findAll(getUsersParamDto, limit, page);
   }
 
   @Post()
